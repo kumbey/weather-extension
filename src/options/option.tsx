@@ -1,10 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import "./popup.css";
+import "./options.css";
 
 const test = (
   <div>
-    <img src="icon.png" alt="" />
+    <h1>Options</h1>
   </div>
 );
 
