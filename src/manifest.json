@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "React Extension",
+    "version": "1.0.0",
+    "description": "Chrome Extension in React!",
+    "action": {
+        "default_title": "React Extension",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "storage",
+        "alarms",
+        "notifications"
+    ]
+}
