@@ -41,9 +41,15 @@ const App: React.FC = () => {
           <Paper>
             <Box px={"16px"} py={"5px"}>
               <InputBase
+                autoFocus
                 placeholder="Add a city name"
                 value={cityInput}
                 onChange={(e) => setCityInput(e.target.value)}
+                onKeyDown={(ev) => {
+                  if (ev.keyCode == 13) {
+                    handleCityBtnClick();
+                  }
+                }}
               />
               <IconButton onClick={handleCityBtnClick}>
                 <AddIcon />
