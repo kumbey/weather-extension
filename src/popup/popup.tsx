@@ -5,11 +5,18 @@ import "./popup.css";
 import WeatherCard from "./WeatherCard/WeatherCard";
 import { Box, Grid, IconButton, InputBase, Paper } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-import { getStoredCities, setStoredCities } from "../utils/storage";
+import {
+  getStoredCities,
+  getStoredOptions,
+  LocalStorageOptions,
+  setStoredCities,
+  setStoredOptions,
+} from "../utils/storage";
 
 const App: React.FC = () => {
   const [cities, setCities] = useState<string[]>([]);
   const [cityInput, setCityInput] = useState<string>("");
+  const [options, setOptions] = useState<LocalStorageOptions | null>(null);
 
   const handleCityBtnClick = () => {
     if (cityInput === "") {
@@ -30,13 +37,28 @@ const App: React.FC = () => {
     });
   };
 
+  const handleTempScaleBtnClick = () => {
+    const updatedOptions: LocalStorageOptions = {
+      ...options,
+      tempScale: options.tempScale === "metric" ? "imperial" : "metric",
+    };
+    setStoredOptions(updatedOptions).then(() => {
+      setOptions(updatedOptions);
+    });
+  };
+
   useEffect(() => {
     getStoredCities().then((cities) => setCities(cities));
+    getStoredOptions().then((options) => setOptions(options));
   }, []);
+
+  if (!options) {
+    return null;
+  }
 
   return (
     <Box mx={"4px"} my={"16px"}>
-      <Grid container>
+      <Grid container justifyContent={"space-between"} alignItems="center">
         <Grid item marginLeft={"4px"}>
           <Paper>
             <Box px={"16px"} py={"5px"}>
@@ -57,10 +79,20 @@ const App: React.FC = () => {
             </Box>
           </Paper>
         </Grid>
+        <Grid item marginRight={"4px"}>
+          <Paper>
+            <Box py={"4px"} width={"40px"}>
+              <IconButton onClick={handleTempScaleBtnClick}>
+                {options.tempScale === "metric" ? "\u2103" : "\u2109"}
+              </IconButton>
+            </Box>
+          </Paper>
+        </Grid>
       </Grid>
       {cities.map((city, index) => (
         <WeatherCard
           city={city}
+          tempScale={options.tempScale}
           key={index}
           onDelete={() => handleCityDeleteBtnClick(index)}
         />

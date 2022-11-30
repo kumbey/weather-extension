@@ -1,35 +1,42 @@
-const OPEN_WEATHER_API_KEY = '2454ab1d0b7eca6cffa6c57bcbb190d8'
+const OPEN_WEATHER_API_KEY = "2454ab1d0b7eca6cffa6c57bcbb190d8";
 
 export interface OpenWeatherData {
-    name:string,
-    main:{
-        feels_like:number,
-        humidity:number,
-        pressure:number,
-        temp:number,
-        temp_max:number,
-        temp_min:number,
-    },
-    weather:{
-        description:string,
-        icon:string,
-        id:number,
-        main:string
-    }[],
-    wind:{
-        deg:number,
-        speed:number
-    }
+  name: string;
+  main: {
+    feels_like: number;
+    humidity: number;
+    pressure: number;
+    temp: number;
+    temp_max: number;
+    temp_min: number;
+  };
+  weather: {
+    description: string;
+    icon: string;
+    id: number;
+    main: string;
+  }[];
+  wind: {
+    deg: number;
+    speed: number;
+  };
 }
 
-export async function fetchOpenWeatherData(city:string):Promise<OpenWeatherData> {
-    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${OPEN_WEATHER_API_KEY}`)
+export type OpenWeatherTempScale = "metric" | "imperial";
 
-    if(!res.ok){
-        throw new Error("City not found!")
-    }
+export async function fetchOpenWeatherData(
+  city: string,
+  tempScale:OpenWeatherTempScale
+): Promise<OpenWeatherData> {
+  const res = await fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${tempScale}&appid=${OPEN_WEATHER_API_KEY}`
+  );
 
-    const data:OpenWeatherData = await res.json()
-    
-    return data
+  if (!res.ok) {
+    throw new Error("City not found!");
+  }
+
+  const data: OpenWeatherData = await res.json();
+
+  return data;
 }
