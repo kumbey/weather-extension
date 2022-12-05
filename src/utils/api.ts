@@ -40,3 +40,8 @@ export async function fetchOpenWeatherData(
 
   return data;
 }
+
+
+export function getWeatherIconSrc(iconCode:string){
+  return `https://openweathermap.org/img/wn/${iconCode}@2x.png`
+}

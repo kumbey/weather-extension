@@ -6,9 +6,11 @@ import {
   Box,
   CardActions,
   Button,
+  Grid,
 } from "@mui/material";
 import {
   fetchOpenWeatherData,
+  getWeatherIconSrc,
   OpenWeatherData,
   OpenWeatherTempScale,
 } from "../../utils/api";
@@ -66,13 +68,34 @@ const WeatherCard: React.FC<{
 
   return (
     <WeatherCardContainer onDelete={onDelete}>
-      <Typography variant="h5">{weatherData.name}</Typography>
-      <Typography variant="body1">
-        {Math.round(weatherData.main.temp)}
-      </Typography>
-      <Typography variant="body1">
-        Feels like: {Math.round(weatherData.main.feels_like)}
-      </Typography>
+      <Grid container justifyContent={"space-around"} alignContent="center">
+        <Grid item alignItems={"center"}>
+          <Typography style={{ fontSize: "24px", textAlign: "center" }}>
+            {weatherData.name}
+          </Typography>
+          <Typography style={{ fontSize: "46px ", textAlign: "center" }}>
+            {Math.round(weatherData.main.temp)}
+          </Typography>
+          <Typography style={{ fontSize: "16px", textAlign: "center" }}>
+            Feels like {Math.round(weatherData.main.feels_like)}
+          </Typography>
+        </Grid>
+        <Grid item textAlign={"center"}>
+          {weatherData.weather.length > 0 && (
+            <>
+              <img
+                src={getWeatherIconSrc(weatherData.weather[0].icon)}
+                alt=""
+              />
+              <Typography
+                style={{ fontSize: "16px !important", textAlign: "center" }}
+              >
+                {weatherData.weather[0].main}
+              </Typography>
+            </>
+          )}
+        </Grid>
+      </Grid>
     </WeatherCardContainer>
   );
 };
