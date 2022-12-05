@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource/roboto";
 import "./popup.css";
-import WeatherCard from "./WeatherCard/WeatherCard";
+import WeatherCard from "../components/WeatherCard/WeatherCard";
 import { Box, Grid, IconButton, InputBase, Paper } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  PictureInPicture as PictureInPictureIcon,
+} from "@mui/icons-material";
 import {
   getStoredCities,
   getStoredOptions,
@@ -12,6 +15,7 @@ import {
   setStoredCities,
   setStoredOptions,
 } from "../utils/storage";
+import { Messages } from "../utils/messages";
 
 const App: React.FC = () => {
   const [cities, setCities] = useState<string[]>([]);
@@ -47,6 +51,19 @@ const App: React.FC = () => {
     });
   };
 
+  const handleOverlayBtnClick = () => {
+    chrome.tabs.query(
+      {
+        active: true,
+      },
+      (tabs) => {
+        if (tabs.length > 0) {
+          chrome.tabs.sendMessage(tabs[0].id, Messages.TOGGLE_OVERLAY);
+        }
+      }
+    );
+  };
+
   useEffect(() => {
     getStoredCities().then((cities) => setCities(cities));
     getStoredOptions().then((options) => setOptions(options));
@@ -58,8 +75,13 @@ const App: React.FC = () => {
 
   return (
     <Box mx={"4px"} my={"16px"}>
-      <Grid container justifyContent={"space-between"} alignItems="center">
-        <Grid item marginLeft={"4px"}>
+      <Grid
+        container
+        alignItems="center"
+        justifyContent={"space-between"}
+        height={"50px"}
+      >
+        <Grid item>
           <Paper>
             <Box px={"16px"} py={"5px"}>
               <InputBase
@@ -79,11 +101,20 @@ const App: React.FC = () => {
             </Box>
           </Paper>
         </Grid>
-        <Grid item marginRight={"4px"}>
+        <Grid item>
           <Paper>
             <Box py={"4px"} width={"40px"}>
               <IconButton onClick={handleTempScaleBtnClick}>
                 {options.tempScale === "metric" ? "\u2103" : "\u2109"}
+              </IconButton>
+            </Box>
+          </Paper>
+        </Grid>
+        <Grid item>
+          <Paper>
+            <Box py={"4px"} width={"40px"}>
+              <IconButton onClick={handleOverlayBtnClick}>
+                <PictureInPictureIcon />
               </IconButton>
             </Box>
           </Paper>
